@@ -5,7 +5,8 @@ let found=new Set(),timer,screen='intro',remaining=90000,lastTick=0,pauseLeft=0,
 function updateClock(){const sec=Math.max(0,Math.ceil(remaining/1000));$('#clock').textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;$('#clock').classList.toggle('urgent',sec<=10);$('#clock').classList.toggle('paused',pauseLeft>0)}
 function advanceTime(ms){if(screen!=='hunt'||gamePaused||found.size===targets.length)return;const paused=Math.min(pauseLeft,ms);pauseLeft-=paused;remaining=Math.max(0,remaining-(ms-paused));updateClock();if(remaining===0)show('missed')}
 setInterval(()=>{const now=performance.now();if(lastTick)advanceTime(now-lastTick);lastTick=now},100);
-function toast(text){$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('#toast').classList.remove('show'),3800)}
+function toast(text,duration=3800){$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('#toast').classList.remove('show'),duration)}
+window.addEventListener('freebox:email-sent',event=>toast(event.detail,6500));
 function sprite(type){const c=document.createElement('canvas');c.width=48;c.height=48;const x=c.getContext('2d');const r=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h)};const line=(a,b,d,e,col,width=2)=>{x.strokeStyle=col;x.lineWidth=width;x.beginPath();x.moveTo(a,b);x.lineTo(d,e);x.stroke()};
 const gold='#d4a65b',cream='#f1dfb5',dark='#182330',red='#c7564f';
 switch(type){case'tote':x.strokeStyle='#70432f';x.lineWidth=3;x.beginPath();x.moveTo(13,22);x.lineTo(13,13);x.quadraticCurveTo(13,3,22,4);x.quadraticCurveTo(31,3,31,13);x.lineTo(31,22);x.stroke();r(8,20,31,4,'#a36b46');r(6,24,35,13,'#a36b46');r(8,37,31,4,'#8b5536');r(11,41,25,2,'#70432f');r(9,24,3,12,'#c59162');r(36,24,3,12,'#7b4b32');r(9,20,28,2,'#dbb083');r(13,20,2,7,'#70432f');r(30,20,2,7,'#70432f');r(21,22,5,3,'#efd09a');r(22,23,3,1,'#8b6537');break;
